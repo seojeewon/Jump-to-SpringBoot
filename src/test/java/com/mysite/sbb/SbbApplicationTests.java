@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,14 +27,13 @@ class SbbApplicationTests {
     @Transactional
     @Test
     void testJpa() {
-        Optional<Question> oq = this.questionRepository.findById(2);
-        assertTrue(oq.isPresent());
-        Question q = oq.get();
-
-        List<Answer> answerList = q.getAnswerList();
-
-        assertEquals(1, answerList.size());
-        assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
+        Question question = new Question();
+        question.setSubject("렉토가 누구인가요?");
+        question.setContent("대충 알랴줘");
+        question.setCreateDate(LocalDateTime.now());
+        this.questionRepository.save(question);
+        question=questionRepository.findBySubject("렉토가 누구인가요?");
+        assertEquals("대충 알랴줘", question.getContent());
     }
 
 }
